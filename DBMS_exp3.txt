@@ -1,4 +1,6 @@
+=============================================================================================================
 1. Find Employee details and Department details using NATURAL JOIN.
+=============================================================================================================
 select * from Employee natural join Department;
 +---------+--------+-----------+-----------+-------------------+------------+--------------+-----------+---------------+
 | Dept_id | Emp_id | Emp_fname | Emp_lname | Emp_Position      | Emp_salary | Emp_JoinDate | Dept_name | Dept_location |
@@ -13,8 +15,9 @@ select * from Employee natural join Department;
 |       2 |     12 | Poonam    | singh     | Tester            |     600000 | 2018-10-08   | IT        | Pune          |
 +---------+--------+-----------+-----------+-------------------+------------+--------------+-----------+---------------+
 
-
+=============================================================================================================
 2. Find the emp_fname,Emp_position,location,Emp_JoinDate who have same Dept id.
+=============================================================================================================
 mysql> select Emp_fname,Emp_Position,Dept_location as location,Emp_JoinDate from Employee inner join Department on Employee.Dept_id=Department.Dept_id ;
 +-----------+-------------------+----------+--------------+
 | Emp_fname | Emp_Position      | location | Emp_JoinDate |
@@ -30,8 +33,6 @@ mysql> select Emp_fname,Emp_Position,Dept_location as location,Emp_JoinDate from
 +-----------+-------------------+----------+--------------+
 8 rows in set (0.00 sec)
 
-mysql> select Emp_fname,Emp_Position,Dept_location as location,Emp_JoinDate from Employee inner join Department on Employee.Dept_id=Department.Dept_id where Dept_id=1;
-ERROR 1052 (23000): Column 'Dept_id' in where clause is ambiguous
 mysql> select Emp_fname,Emp_Position,Dept_location as location,Emp_JoinDate from Employee inner join Department on Employee.Dept_id=Department.Dept_id where Employee.Dept_id=1;
 +-----------+-------------------+----------+--------------+
 | Emp_fname | Emp_Position      | location | Emp_JoinDate |
@@ -43,9 +44,10 @@ mysql> select Emp_fname,Emp_Position,Dept_location as location,Emp_JoinDate from
 3 rows in set (0.00 sec)
 
 
-
+=============================================================================================================
 3. Find the Employee details ,Proj_id,Project cost who does not have Project
 location as ‘Mumbai’.
+=============================================================================================================
 mysql> select Emp_id,Emp_fname,Emp_lname,Emp_Position,Proj_id,Proj_cost from Employee inner join Project on Employee.Dept_id=Project.Dept_id where  not Proj_location ="Mumbai";
 +--------+-----------+-----------+-------------------+---------+-----------+
 | Emp_id | Emp_fname | Emp_lname | Emp_Position      | Proj_id | Proj_cost |
@@ -66,9 +68,10 @@ mysql> select Emp_id,Emp_fname,Emp_lname,Emp_Position,Proj_id,Proj_cost from Emp
 
 
 
-
+=============================================================================================================
 4. Find Department Name ,employee name, Emp_position for which project year
 is 2012,
+=============================================================================================================
 mysql> select Emp_id,Emp_fname,Emp_lname,Emp_Position,Proj_id,Proj_cost from Employee inner join Project on Employee.Dept_id=Project.Dept_id where  not Proj_location ="Mumbai";
 +--------+-----------+-----------+-------------------+---------+-----------+
 | Emp_id | Emp_fname | Emp_lname | Emp_Position      | Proj_id | Proj_cost |
@@ -90,8 +93,9 @@ mysql> select Emp_id,Emp_fname,Emp_lname,Emp_Position,Proj_id,Proj_cost from Emp
 
 
 
-
+=============================================================================================================
 5. Display emp_position,D_name who have Project cost &gt;30000
+=============================================================================================================
 mysql> select Emp_id,Emp_fname,Emp_lname,Emp_Position,Proj_id,Proj_cost from Employee inner join Project on Employee.Dept_id=Project.Dept_id where  not Proj_location ="Mumbai";
 +--------+-----------+-----------+-------------------+---------+-----------+
 | Emp_id | Emp_fname | Emp_lname | Emp_Position      | Proj_id | Proj_cost |
@@ -112,8 +116,9 @@ mysql> select Emp_id,Emp_fname,Emp_lname,Emp_Position,Proj_id,Proj_cost from Emp
 
 
 
-
+=============================================================================================================
 6. Find the names of all the Projects that started in the year 2015.
+=============================================================================================================
 select Proj_name from Project where Proj_year=2011;
 +-----------+
 | Proj_name |
@@ -124,8 +129,9 @@ select Proj_name from Project where Proj_year=2011;
 
 
 
-
+=============================================================================================================
 7. List the Dept_name having no_of_emp=10 / no of emp=2
+=============================================================================================================
 select Dept_name from Employee right join Department on Employee.Dept_id=Department.Dept_id group by Employee.Dept_id having count(Employee.Dept_id)=2;
 +-----------+
 | Dept_name |
@@ -135,22 +141,106 @@ select Dept_name from Employee right join Department on Employee.Dept_id=Departm
 
 
 
-
+=============================================================================================================
 8.Display the total number of employee who have joined any project before 2009
+=============================================================================================================
+select count(distinct Emp_fname) as total_Employee from Employee natural join Project where Proj_year < 2009 ;
++----------------+
+| total_Employee |
++----------------+
+|              3 |
++----------------+
 
 
-
-
-
+=============================================================================================================
 9. Create a view showing the employee and Department details.
+=============================================================================================================
+ create view IT_wale as select * from Employee where Dept_id=2;
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> select * from IT_wale;
++--------+---------+-----------+-----------+--------------+------------+--------------+
+| Emp_id | Dept_id | Emp_fname | Emp_lname | Emp_Position | Emp_salary | Emp_JoinDate |
++--------+---------+-----------+-----------+--------------+------------+--------------+
+|      2 |       2 | Rajesh    | Pawar     | SDE          |    1760000 | 2004-05-11   |
+|      3 |       2 | Alicia    | Siera     | Manager      |    3740000 | 2002-02-13   |
+|     12 |       2 | Poonam    | singh     | Tester       |     600000 | 2018-10-08   |
++--------+---------+-----------+-----------+--------------+------------+--------------+
+3 rows in set (0.01 sec)
 
 
-
+=============================================================================================================
 
 10. Perform Manipulation on simple view-Insert, update, delete, drop view.
+=============================================================================================================
+
+CREATE VIEW--------
+ create view IT_wale as select * from Employee where Dept_id=2;
+Query OK, 0 rows affected (0.15 sec)
+
+mysql> select * from IT_wale;
++--------+---------+-----------+-----------+--------------+------------+--------------+
+| Emp_id | Dept_id | Emp_fname | Emp_lname | Emp_Position | Emp_salary | Emp_JoinDate |
++--------+---------+-----------+-----------+--------------+------------+--------------+
+|      2 |       2 | Rajesh    | Pawar     | SDE          |    1760000 | 2004-05-11   |
+|      3 |       2 | Alicia    | Siera     | Manager      |    3740000 | 2002-02-13   |
+|     12 |       2 | Poonam    | singh     | Tester       |     600000 | 2018-10-08   |
++--------+---------+-----------+-----------+--------------+------------+--------------+
+3 rows in set (0.01 sec)
+
+INSERT VIEW-----------
+
+insert into IT_wale(Emp_id,Dept_id,Emp_fname,Emp_lname,Emp_Position,Emp_salary,Emp_JoinDate) values (51,2,'Ak','kk'
+Query OK, 1 row affected, 1 warning (0.08 sec)
+
+mysql> select * from IT_wale;
++--------+---------+-----------+-----------+--------------+------------+--------------+
+| Emp_id | Dept_id | Emp_fname | Emp_lname | Emp_Position | Emp_salary | Emp_JoinDate |
++--------+---------+-----------+-----------+--------------+------------+--------------+
+|      2 |       2 | Rajesh    | Pawar     | SDE          |    1760000 | 2004-05-11   |
+|      3 |       2 | Alicia    | Siera     | Manager      |    3740000 | 2002-02-13   |
+|     12 |       2 | Poonam    | singh     | Tester       |     600000 | 2018-10-08   |
+|     51 |       2 | Ak        | kk        | SDE2         |    4000000 | 0000-00-00   |
++--------+---------+-----------+-----------+--------------+------------+--------------+
+4 rows in set (0.00 sec)
+
+UPDATE VIEW---------
+ alter view IT_wale as  select * from Employee;
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> select * from IT_wale;
++--------+---------+-----------+-----------+-------------------+------------+--------------+
+| Emp_id | Dept_id | Emp_fname | Emp_lname | Emp_Position      | Emp_salary | Emp_JoinDate |
++--------+---------+-----------+-----------+-------------------+------------+--------------+
+|      1 |       1 | Atharva   | Khodke    | SDE               |    3850000 | 2007-07-15   |
+|      2 |       2 | Rajesh    | Pawar     | SDE               |    1760000 | 2004-05-11   |
+|      3 |       2 | Alicia    | Siera     | Manager           |    3740000 | 2002-02-13   |
+|      6 |       1 | Om        | Jadhav    | Tester            |    1320000 | 2005-09-08   |
+|      7 |       4 | Ganesh    | Mehta     | Designer          |    1980000 | 2009-10-02   |
+|      8 |       4 | Parekh    | Gowda     | Manager           |    2200000 | 2008-02-16   |
+|     11 |       1 | Hari      | singh     | Junior Programmer |     600000 | 2019-03-11   |
+|     12 |       2 | Poonam    | singh     | Tester            |     600000 | 2018-10-08   |
+|     51 |       2 | Ak        | kk        | SDE2              |    4000000 | 0000-00-00   |
++--------+---------+-----------+-----------+-------------------+------------+--------------+
 
 
 
+DELETE VIEW------------
+
+drop view IT_wale;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_te31429_db |
++----------------------+
+| Department           |
+| Employee             |
+| Project              |
++----------------------+
+3 rows in set (0.00 sec)
+
+=============================================================================================================
 
 
 
