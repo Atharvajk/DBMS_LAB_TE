@@ -1,0 +1,38 @@
+mysql> alter table Student modify Roll int primary key auto_increment;
+
+mysql> create table Result(Roll int primary key, name varchar(50) not null, class varchar(30), foreign key (Roll) references Stud_marks(Roll));
+
+mysql> insert into Stud_marks (name,marks) values("Akash",1200), ("Mansy",950);
+mysql> insert into Stud_marks (name,marks) values("Mahesh",1000),
+("Apurva",800), ("Sarvesh",500), ("Yadhnesh",1450), ("Ayush",980), ("Kunal",650);
+
+
+
+create function getclass(marks int) returns varchar(30)
+begin 
+declare class varchar(30); 
+if marks>1000 then set class = "Distinction";
+elseif marks>900 then  set class = "First class"; 
+elseif marks > 700 then set class = "Second class"; 
+else  set class = "fail"; 
+end if; 
+return class;
+end;&
+
+ insert into Result (Roll,name,class) values ((select Roll from Stud_marks limit 1),(select name from Stud_marks limit 1),(select getclass((select marks from Stud_marks limit 1))))&
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from Result&
++------+---------+-------------+
+| Roll | name    | class       |
++------+---------+-------------+
+|    1 | Atharva | Distinction |
++------+---------+-------------+
+
+
+
+create procedure make_result() begin declare x INT default 0;
+    -> set x = select count(Roll) from Stud_marks;
+    -> declare i INT default 0;
+    -> set i=0;
+    -> while i<x do
