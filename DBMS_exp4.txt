@@ -1,7 +1,10 @@
-mysql> alter table Student modify Roll int primary key auto_increment;
+CREATE TABLE Stud_marks (
+    Roll INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    marks INT NOT NULL
+);
 
 mysql> create table Result(Roll int primary key, name varchar(50) not null, class varchar(30), foreign key (Roll) references Stud_marks(Roll));
-
 mysql> insert into Stud_marks (name,marks) values("Akash",1200), ("Mansy",950);
 mysql> insert into Stud_marks (name,marks) values("Mahesh",1000),
 ("Apurva",800), ("Sarvesh",500), ("Yadhnesh",1450), ("Ayush",980), ("Kunal",650);
@@ -29,10 +32,45 @@ mysql> select * from Result&
 |    1 | Atharva | Distinction |
 +------+---------+-------------+
 
+mysql> delimiter //
+mysql> CREATE PROCEDURE makeresult()
+    -> BEGIN
+    ->     DECLARE x INT;
+    ->     DECLARE i INT;
+    ->     SET x = (SELECT COUNT(marks) FROM Stud_marks);
+    ->     SET i = 0;
+    ->     
+    ->     WHILE i < x DO
+    ->         INSERT INTO Result (Roll, name, class)
+    ->         SELECT Roll, name, getclass(marks)
+    ->         FROM Stud_marks
+    ->         WHERE Roll = i + 1;
+    ->         
+    ->         SET i = i + 1;
+    ->     END WHILE;
+    -> END;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
 
+mysql> truncate Result//
+Query OK, 0 rows affected (0.03 sec)
 
-create procedure make_result() begin declare x INT default 0;
-    -> set x = select count(Roll) from Stud_marks;
-    -> declare i INT default 0;
-    -> set i=0;
-    -> while i<x do
+mysql> delimiter ;
+mysql> call makeresult();
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select * from Result;
++------+----------+--------------+
+| Roll | name     | class        |
++------+----------+--------------+
+|    1 | Atharva  | Distinction  |
+|    2 | Akash    | Distinction  |
+|    3 | Mansy    | First class  |
+|    4 | Mahesh   | First class  |
+|    5 | Apurva   | Second class |
+|    6 | Sarvesh  | fail         |
+|    7 | Yadhnesh | Distinction  |
+|    8 | Ayush    | First class  |
+|    9 | Kunal    | fail         |
++------+----------+--------------+
+9 rows in set (0.00 sec)
