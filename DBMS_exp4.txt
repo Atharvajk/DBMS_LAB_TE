@@ -1,0 +1,141 @@
+create table Borrower(Roll_no int primary key,Date_of_Issue date not null,Name_of_Book varchar(200) not null,Status varchar(2) not null);
+Query OK, 0 rows affected (0.04 sec)
+
+create table Fine(Roll_no int primary key,Date_of_Fine date not null ,Amount int not null,foreign key (Roll_no) references Borrower(Roll_no));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> describe Fine;
++--------------+---------+------+-----+---------+-------+
+| Field        | Type    | Null | Key | Default | Extra |
++--------------+---------+------+-----+---------+-------+
+| Roll_no      | int(11) | NO   | PRI | NULL    |       |
+| Date_of_Fine | date    | NO   |     | NULL    |       |
+| Amount       | int(11) | NO   |     | NULL    |       |
++--------------+---------+------+-----+---------+-------+
+
+describe Borrower;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| Roll_no       | int(11)      | NO   | PRI | NULL    |       |
+| Date_of_Issue | date         | NO   |     | NULL    |       |
+| Name_of_Book  | varchar(200) | NO   |     | NULL    |       |
+| Status        | varchar(2)   | NO   |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+
+delimiter//
+create procedure calculatefine(roll int,bookname varchar(200))
+    -> begin declare amount int; 
+    -> declare dateissued date;
+    -> declare no_days int; 
+    -> declare futureissuedate condition for sqlstate '45000';
+    -> declare continue handler for not found
+    -> set amount = 0;
+    -> set no_days = null; 
+    -> select Date_of_Issue into  dateissued from Borrower where Roll_No = roll and Name_of_Book = bookname;
+    -> set no_days = datediff(curdate(),dateissued);
+    ->  if no_days is null or no_days < 0 then
+    -> if no_days is null then
+    -> select 'selected roll number has not borrowed any book/ invalid rollno or book name';
+    ->  else
+    ->      select 'a book cannot be returned which has a future issue date.';
+    ->     end if;
+    ->   else
+    ->     if no_days >= 15 and no_days <= 30 then
+    ->       set amount = no_days * 5;
+    ->     elseif no_days > 30 then
+    ->       set amount = no_days * 50;
+    ->     end if;
+    ->  
+    ->     update Borrower set Status = 'r' where Roll_no = roll and Name_of_Book  = bookname;
+    ->     insert into Fine values (roll, curdate(), amount);
+    ->     commit;
+    ->   end if;
+    ->  
+    ->   
+    ->  
+    -> end;
+    -> //
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+
+mysql> insert into Borrower values(1,"Atharva",2023/01/15',"Dbms","I");
+
+mysql> insert into Borrower values(2,"somesh",'2023/7/3',"CNS","I");
+
+mysql> insert into Borrower values(2,"Kartik",'2023/8/10',"CNS","I");
+
+mysql> insert into Borrower values(4,"Mandar",'2023/08/31',"ABCD","I");
+
+mysql> insert into Borrower values(5,"OM",'2023/08/1',"QWERTY","I");
+
+mysql> select * from Borrower;
++---------+---------+---------------+--------------+--------+
+| Roll_no | Name    | Date_of_Issue | Name_of_Book | Status |
++---------+---------+---------------+--------------+--------+
+|       1 | Atharva | 2023-01-15    | Dbms         | I      |
+|       2 | somesh  | 2023-07-03    | CNS          | I      |
+|       3 | Kartik  | 2023-08-10    | IOT          | I      |
+|       4 | Mandar  | 2023-08-31    | ABCD         | I      |
+|       5 | OM      | 2023-08-01    | QWERTY       | I      |
++---------+---------+---------------+--------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from Fine;
+Empty set (0.00 sec)
+
+call calculatefine(9,"fdf");
++-----------------------------------------------------------------------------+
+| selected roll number has not borrowed any book/ invalid rollno or book name |
++-----------------------------------------------------------------------------+
+| selected roll number has not borrowed any book/ invalid rollno or book name |
++-----------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+mysql> call calculatefine(1,"DBMS");
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> call calculatefine(2,"CNS");
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> call calculatefine(3,"IOT");
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> call calculatefine(4,"ABCD");
++----------------------------------------------------------+
+| a book cannot be returned which has a future issue date. |
++----------------------------------------------------------+
+| a book cannot be returned which has a future issue date. |
++----------------------------------------------------------+
+1 row in set (0.00 sec)
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call calculatefine(5,"QWERTY");
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from Fine;
++---------+--------------+--------+
+| Roll_no | Date_of_Fine | Amount |
++---------+--------------+--------+
+|       1 | 2023-08-21   |  10900 |
+|       2 | 2023-08-21   |   2450 |
+|       3 | 2023-08-21   |   NULL |
+|       5 | 2023-08-21   |    100 |
++---------+--------------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select * from Borrower;
++---------+---------+---------------+--------------+--------+
+| Roll_no | Name    | Date_of_Issue | Name_of_Book | Status |
++---------+---------+---------------+--------------+--------+
+|       1 | Atharva | 2023-01-15    | Dbms         | r      |
+|       2 | somesh  | 2023-07-03    | CNS          | r      |
+|       3 | Kartik  | 2023-08-10    | IOT          | r      |
+|       4 | Mandar  | 2023-08-31    | ABCD         | I      |
+|       5 | OM      | 2023-08-01    | QWERTY       | r      |
++---------+---------+---------------+--------------+--------+
+5 rows in set (0.00 sec)
+
+
+
