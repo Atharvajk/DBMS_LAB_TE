@@ -1,3 +1,19 @@
+DBMS Lab Assignment No 5
+
+Name: Atharva JItendra Khodke
+Roll No: 31429
+Class: TE04
+Batch:  L4
+
+Tittle: Named PL/SQL block: Stored Procedure and Stored Function
+
+Assignment No 5
+Write a Stored Procedure namely proc_Grade for the categorization of student. 
+If marks scored by students in examination is <=1500 and marks> 990 
+then student will be placed in distinction category if marks scored are between 989 and900 
+category is first class, if marks899and 825 category is Higher Second Class.
+
+
 CREATE TABLE Stud_marks (
     Roll INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
