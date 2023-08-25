@@ -1,3 +1,18 @@
+DBMS Lab Assignment No 3
+
+Name: Atharva JItendra Khodke
+Roll No: 31429
+Class: TE04
+Batch:  L4
+
+Tittle: SQL Queries: - Joins, sub-queried, views
+
+Assignment No 3 (based on Employee schema)  
+    • Employee( Emp_id, Dept_id, Emp_fname, Emp_lname, Emp_Position,    
+      Emp_salary,Emp_JoinDate)
+    • Dept ( Dept_id, Dept_name,location)
+    • Project( Proj_id,Dept_id ,Proj_Name,Proj_Location,Proj_cost,Proj_year)
+
 =============================================================================================================
 1. Find Employee details and Department details using NATURAL JOIN.
 =============================================================================================================
