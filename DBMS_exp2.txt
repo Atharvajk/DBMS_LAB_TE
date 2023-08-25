@@ -1,9 +1,32 @@
+DBMS Lab Assignment No 2
+
+Name: Atharva JItendra Khodke
+Roll No: 31429
+Class: TE04
+Batch:  L4
+
+Tittle: SQL Queries
+
+Assignment No 2A (Employee Schema)
+Create following tables in MYSQL
+● Employee( Emp_id, Dept_id, Emp_fname, Emp_lname, Emp_Position,
+Emp_salary,Emp_JoinDate)
+● Dept ( Dept_id, Dept_name,Dept_location ,)
+● Project( Proj_id,Dept_id ,Proj_Name,Proj_Location,Proj_cost,Proj_year)
+Create view (simple), index, sequence and synonym based on above tables.
+
+
+Code:
+
+=============================================================================================================
+Creating Tables
+=============================================================================================================
+
 create table Department(Dept_id int primary key, Dept_name varchar(30) not null, Dept_location varchar(25) not null);
 Query OK, 0 rows affected (0.05 sec)
 
- create Table Employee(Emp_id int primary key, Dept_id int , Emp_fname varchar(20) not null, Emp_lname varchar(20) not null, Emp_Position varchar(20), Emp_salary double , Emp_JoinDate date,foreign key (Dept_id) references Department(Dept_id) on delete  cascade);
+create Table Employee(Emp_id int primary key, Dept_id int , Emp_fname varchar(20) not null, Emp_lname varchar(20) not null, Emp_Position varchar(20), Emp_salary double , Emp_JoinDate date,foreign key (Dept_id) references Department(Dept_id) on delete  cascade);
 Query OK, 0 rows affected (0.07 sec)
-
 
 create table Project(Proj_id int primary key, Dept_id int, Proj_name varchar(100) not null, Proj_location varchar(25) not null, Proj_cost double not null, Proj_year year not null, foreign key (Dept_id) references Department(Dept_id) on delete cascade);
 Query OK, 0 rows affected (0.05 sec)
@@ -55,6 +78,15 @@ mysql> describe Project;
 +---------------+--------------+------+-----+---------+-------+
 6 rows in set (0.00 sec)
 
+=============================================================================================================
+
+-------Operations-----------
+=============================================================================================================
+
+=============================================================================================================
+1. Inserting records into tables
+=============================================================================================================
+
 mysql> insert into Department values (1,"Computer","Pune");
 Query OK, 1 row affected (0.02 sec)
 
@@ -101,9 +133,6 @@ Query OK, 1 row affected, 1 warning (0.02 sec)
 mysql> insert into Employee values(6,1,"Om","Jadhav","Tester",1200000,'2005/9/08');
 Query OK, 1 row affected (0.02 sec)
 
-mysql> insert into Employee values(6,1,"Om","Jadhav","Tester",1200000,mysql> insert into Employee vlues(6,1,"","Jadhav","Tester",1200000,'2005/9/08');
-
-^C
 mysql> insert into Employee values(7,4,"Ganesh","Mehta","Designer",1800000,'2009/10/02');
 Query OK, 1 row affected (0.01 sec)
 
@@ -173,15 +202,10 @@ mysql> select * from Project;
 5 rows in set (0.00 sec)
 =============================================================================================================
 =============================================================================================================
-
-
-
--------Operations-----------
+2. Display all Employee details with Department ‘Computer’ and ‘IT’ and Employee first 
+name starting with 'p' or 'h'
 =============================================================================================================
 
-
-2. Display all Employee details with Department ‘Computer’ and ‘IT’ and Employee
-first name starting with 'p' or 'h'
 mysql> select * from Employee where Dept_id in (1,2) and Emp_fname like "P%" or Emp_fname like "H%";
 +--------+---------+-----------+-----------+-------------------+------------+--------------+
 | Emp_id | Dept_id | Emp_fname | Emp_lname | Emp_Position      | Emp_salary | Emp_JoinDate |
@@ -213,6 +237,7 @@ mysql> select Emp_Position,count(Emp_id) from Employee group by Emp_Position;
 =============================================================================================================
 4. Give 10% increase in Salary of the Employee whose Birthdate before 1985.
 =============================================================================================================
+
  select * from Employee where year(Emp_JoinDate)<2010;
 +--------+---------+-----------+-----------+--------------+------------+--------------+
 | Emp_id | Dept_id | Emp_fname | Emp_lname | Emp_Position | Emp_salary | Emp_JoinDate |
@@ -245,6 +270,7 @@ mysql> select * from Employee where year(Emp_JoinDate)<2010;
 =============================================================================================================
 5. Delete Department details which location is ‘Mumbai’.
 =============================================================================================================
+
 mysql> update Employee set Emp_salary=Emp_salary+Emp_salary*10/100 where year(Emp_JoinDate)<2010;
 Query OK, 6 rows affected (0.03 sec)
 Rows matched: 6  Changed: 6  Warnings: 0
