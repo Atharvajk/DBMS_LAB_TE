@@ -1,3 +1,29 @@
+DBMS Lab Assignment No 4
+
+Name: Atharva JItendra Khodke
+Roll No: 31429
+Class: TE04
+Batch:  L4
+
+Tittle: Unnamed PL/SQL block: Use of control structure, exception handeling is mandatory
+
+Assignment No 4 
+    1. Borrower(Roll_no, Name, Date of Issue, Name of Book, Status)
+    2. Fine(Roll_no, Date, Amt)
+
+Create Procedure for:
+Check the number of days (from date of issue).
+If days are between 15 to 30 then fine amount will be Rs 5per day.
+If no. of days>30, per day fine will be Rs 50 per day and for days less than 30, Rs. 5 per day.
+After submitting the book, status will change from I to R.
+If condition of fine is true, then details will be stored into fine table.
+Also handles the exception by named exception handler or user define exception handler.
+
+code:
+
+--------------------------------------------------------------------------------------------------------------------
+Create Tables
+--------------------------------------------------------------------------------------------------------------------
 create table Borrower(Roll_no int primary key,Date_of_Issue date not null,Name_of_Book varchar(200) not null,Status varchar(2) not null);
 Query OK, 0 rows affected (0.04 sec)
 
@@ -23,6 +49,9 @@ describe Borrower;
 | Status        | varchar(2)   | NO   |     | NULL    |       |
 +---------------+--------------+------+-----+---------+-------+
 
+--------------------------------------------------------------------------------------------------------------------
+Creating Procedure to calculate fine
+--------------------------------------------------------------------------------------------------------------------
 delimiter//
 create procedure calculatefine(roll int,bookname varchar(200))
     -> begin declare amount int; 
@@ -60,6 +89,10 @@ Query OK, 0 rows affected (0.00 sec)
 
 mysql> delimiter ;
 
+--------------------------------------------------------------------------------------------------------------------
+Insert records into Tables
+--------------------------------------------------------------------------------------------------------------------
+
 mysql> insert into Borrower values(1,"Atharva",2023/01/15',"Dbms","I");
 
 mysql> insert into Borrower values(2,"somesh",'2023/7/3',"CNS","I");
@@ -85,13 +118,10 @@ mysql> select * from Borrower;
 mysql> select * from Fine;
 Empty set (0.00 sec)
 
-call calculatefine(9,"fdf");
-+-----------------------------------------------------------------------------+
-| selected roll number has not borrowed any book/ invalid rollno or book name |
-+-----------------------------------------------------------------------------+
-| selected roll number has not borrowed any book/ invalid rollno or book name |
-+-----------------------------------------------------------------------------+
-1 row in set (0.00 sec)
+--------------------------------------------------------------------------------------------------------------------
+Calling Procedures to fill the Fine table
+--------------------------------------------------------------------------------------------------------------------
+
 
 mysql> call calculatefine(1,"DBMS");
 Query OK, 0 rows affected (0.03 sec)
@@ -102,9 +132,9 @@ Query OK, 0 rows affected (0.03 sec)
 mysql> call calculatefine(3,"IOT");
 Query OK, 0 rows affected (0.02 sec)
 
+
+//Exception handeling
 mysql> call calculatefine(4,"ABCD");
-+----------------------------------------------------------+
-| a book cannot be returned which has a future issue date. |
 +----------------------------------------------------------+
 | a book cannot be returned which has a future issue date. |
 +----------------------------------------------------------+
@@ -113,6 +143,17 @@ Query OK, 0 rows affected (0.00 sec)
 
 mysql> call calculatefine(5,"QWERTY");
 Query OK, 0 rows affected (0.02 sec)
+
+//Exception handeling
+call calculatefine(9,"fdf");
++-----------------------------------------------------------------------------+
+| selected roll number has not borrowed any book/ invalid rollno or book name |
++-----------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+//Output
+
 
 mysql> select * from Fine;
 +---------+--------------+--------+
