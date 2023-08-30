@@ -10,10 +10,17 @@ Tittle: Named PL/SQL block: Stored Procedure and Stored Function
 Assignment No 5
 Write a Stored Procedure namely proc_Grade for the categorization of student. 
 If marks scored by students in examination is <=1500 and marks> 990 
-then student will be placed in distinction category if marks scored are between 989 and900 
-category is first class, if marks899and 825 category is Higher Second Class.
+then student will be placed in distinction category
+if marks scored are between 989 and900 category is first class,
+if marks899and 825 category is Higher Second Class.
+
+Write a PL/SQLblock to use procedure created with above requirement. 
+Stud_Marks(name, total_marks)      Result(Roll,Name, Class)
 
 
+--------------------------------------------------------------------------------------------------------------------
+Create Tables
+--------------------------------------------------------------------------------------------------------------------
 CREATE TABLE Stud_marks (
     Roll INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -26,17 +33,23 @@ mysql> insert into Stud_marks (name,marks) values("Mahesh",1000),
 ("Apurva",800), ("Sarvesh",500), ("Yadhnesh",1450), ("Ayush",980), ("Kunal",650);
 
 
-
+--------------------------------------------------------------------------------------------------------------------
+Create Function
+--------------------------------------------------------------------------------------------------------------------
 create function getclass(marks int) returns varchar(30)
 begin 
 declare class varchar(30); 
-if marks>1000 then set class = "Distinction";
-elseif marks>900 then  set class = "First class"; 
-elseif marks > 700 then set class = "Second class"; 
+if marks<1500 and marks> 990 then set class = "Distinction";
+elseif marks>900 and marks<989 then  set class = "First class"; 
+elseif marks > 825 and marks<899 then set class = "Second class"; 
 else  set class = "fail"; 
 end if; 
 return class;
 end;&
+
+--------------------------------------------------------------------------------------------------------------------
+Trying Inserting using Function
+--------------------------------------------------------------------------------------------------------------------
 
  insert into Result (Roll,name,class) values ((select Roll from Stud_marks limit 1),(select name from Stud_marks limit 1),(select getclass((select marks from Stud_marks limit 1))))&
 Query OK, 1 row affected (0.02 sec)
@@ -48,6 +61,10 @@ mysql> select * from Result&
 |    1 | Atharva | Distinction |
 +------+---------+-------------+
 
+
+--------------------------------------------------------------------------------------------------------------------
+Create Procedure
+--------------------------------------------------------------------------------------------------------------------
 mysql> delimiter //
 mysql> CREATE PROCEDURE makeresult()
     -> BEGIN
@@ -71,6 +88,9 @@ Query OK, 0 rows affected (0.00 sec)
 mysql> truncate Result//
 Query OK, 0 rows affected (0.03 sec)
 
+--------------------------------------------------------------------------------------------------------------------
+Single procedure call to insert all records using function to Result table
+--------------------------------------------------------------------------------------------------------------------
 mysql> delimiter ;
 mysql> call makeresult();
 Query OK, 1 row affected (0.08 sec)
