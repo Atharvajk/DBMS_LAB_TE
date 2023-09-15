@@ -1,0 +1,115 @@
+Cursors: (All types: Implicit, Explicit, Cursor FOR Loop, Parameterized Cursor)
+Write a PL/SQL block of code using parameterized Cursor, that will merge the data available in the newly created table 
+N_EmpId with the data available in the table O_EmpId.
+If the  data in the first table already exist in the second table then that data should be skipped.
+
+
+-- Create the O_Emp table
+CREATE TABLE O_Emp (
+    emp_id INT  ,
+    emp_name VARCHAR(255) NOT NULL
+);
+
+-- Create the N_Emp table
+CREATE TABLE N_Emp (
+    emp_id INT  PRIMARY KEY,
+    emp_name VARCHAR(255) NOT NULL
+);
+
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+-- Insert values into O_Emp
+INSERT INTO O_Emp (emp_id, emp_name) VALUES (1, 'Atharva');
+INSERT INTO O_Emp (emp_id, emp_name) VALUES (2, 'Om');
+INSERT INTO O_Emp (emp_id, emp_name) VALUES (3, 'Aditya');
+INSERT INTO O_Emp (emp_id, emp_name) VALUES (4, 'Vivek');
+INSERT INTO O_Emp (emp_id, emp_name) VALUES (1, 'Atharva');
+INSERT INTO O_Emp (emp_id, emp_name) VALUES (3, 'Aditya');
+
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+
+mysql> select * from O_Emp;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|      1 | Atharva  |
+|      2 | Om       |
+|      3 | Aditya   |
+|      4 | Vivek    |
+|      1 | Atharva  |
+|      3 | Aditya   |
++--------+----------+
+6 rows in set (0.00 sec)
+
+mysql> select * from N_Emp;
+Empty set (0.00 sec)
+
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+DELIMITER //
+
+CREATE PROCEDURE merge_employee()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE id INT;
+    DECLARE name VARCHAR(255);
+    
+
+    DECLARE cur CURSOR FOR SELECT emp_id, emp_name FROM O_Emp;
+    
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    OPEN cur;
+    
+    while not done do
+
+        FETCH cur INTO id, name;
+        
+        
+
+            IF NOT EXISTS (SELECT * FROM N_Emp WHERE emp_id = id) THEN
+                INSERT INTO N_Emp VALUES (id, name);
+            END IF;
+        
+    end while;
+    
+    CLOSE cur;
+END;
+//
+
+DELIMITER ;
+
+---------------------------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------------
+
+mysql> call merge_employee();
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> select * from N_Emp;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|      1 | Atharva  |
+|      2 | Om       |
+|      3 | Aditya   |
+|      4 | Vivek    |
++--------+----------+
+4 rows in set (0.00 sec)
+
+mysql> select * from O_Emp;
++--------+----------+
+| emp_id | emp_name |
++--------+----------+
+|      1 | Atharva  |
+|      2 | Om       |
+|      3 | Aditya   |
+|      4 | Vivek    |
+|      1 | Atharva  |
+|      3 | Aditya   |
++--------+----------+
+6 rows in set (0.00 sec)
+
+
