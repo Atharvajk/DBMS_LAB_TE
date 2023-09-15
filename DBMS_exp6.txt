@@ -1,9 +1,19 @@
-Cursors: (All types: Implicit, Explicit, Cursor FOR Loop, Parameterized Cursor)
+DBMS Lab Assignment No 6
+
+Name: Atharva JItendra Khodke
+Roll No: 31429
+Class: TE04
+Batch:  L4
+
+Tittle: Cursors: (All types: Implicit, Explicit, Cursor FOR Loop, Parameterized Cursor)
 Write a PL/SQL block of code using parameterized Cursor, that will merge the data available in the newly created table 
 N_EmpId with the data available in the table O_EmpId.
 If the  data in the first table already exist in the second table then that data should be skipped.
 
 
+--------------------------------------------------------------------------------------------------------------------
+Create Tables
+--------------------------------------------------------------------------------------------------------------------
 -- Create the O_Emp table
 CREATE TABLE O_Emp (
     emp_id INT  ,
@@ -16,8 +26,9 @@ CREATE TABLE N_Emp (
     emp_name VARCHAR(255) NOT NULL
 );
 
----------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+Inserting data
+--------------------------------------------------------------------------------------------------------------------
 -- Insert values into O_Emp
 INSERT INTO O_Emp (emp_id, emp_name) VALUES (1, 'Atharva');
 INSERT INTO O_Emp (emp_id, emp_name) VALUES (2, 'Om');
@@ -45,8 +56,9 @@ mysql> select * from O_Emp;
 mysql> select * from N_Emp;
 Empty set (0.00 sec)
 
----------------------------------------------------------------------------------------------------------------
----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+Create Procedure
+--------------------------------------------------------------------------------------------------------------------
 DELIMITER //
 
 CREATE PROCEDURE merge_employee()
@@ -81,9 +93,9 @@ END;
 
 DELIMITER ;
 
----------------------------------------------------------------------------------------------------------------
-
----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------
+Calling Procedure
+--------------------------------------------------------------------------------------------------------------------
 
 mysql> call merge_employee();
 Query OK, 0 rows affected, 1 warning (0.04 sec)
