@@ -92,3 +92,61 @@ public class Program {
 	}
 }
 --------------------------------------------------------------------------------------------------------------------
+Output:
+
+----------------------------------------------------------
+1. Print Records
+2. Add Records
+3. Update Record
+4. Delete Record
+1
+id1 name1
+id2 name2
+id3 name3
+Do you want to continue (y/n) -
+y
+----------------------------------------------------------
+1. Print Records
+2. Add Records
+3. Update Record
+4. Delete Record
+2
+Enter id and name of the employee -
+id4 name4
+Do you want to continue (y/n) -
+y
+----------------------------------------------------------
+1. Print Records
+2. Add Records
+3. Update Record
+4. Delete Record
+3
+Enter id of the employee who's record to be updated -
+id2
+Enter new name -
+newName2
+Do you want to continue (y/n) -
+y
+----------------------------------------------------------
+1. Print Records
+2. Add Records
+3. Update Record
+4. Delete Record
+4
+Enter id of the employee who's record to be deleted -
+id3
+Do you want to continue (y/n) -
+y
+----------------------------------------------------------
+1. Print Records
+2. Add Records
+3. Update Record
+4. Delete Record
+1
+id1 name1
+id2 newName2
+id4 name4
+Do you want to continue (y/n) -
+n
+
+
