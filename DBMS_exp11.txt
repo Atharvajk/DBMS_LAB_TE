@@ -1,1 +1,87 @@
+--------------------------------------------------------------------------------------------------------------------
+DBMS Lab Assignment No 11
+--------------------------------------------------------------------------------------------------------------------
+
+Name: Atharva JItendra Khodke
+Roll No: 31429
+Class: TE04
+Batch:  L4
+--------------------------------------------------------------------------------------------------------------------
+
+Tittle:MongoDB Map-reduces operations:
+Implement Map reduces operation with suitable example using
+MongoDB.
+
+--------------------------------------------------------------------------------------------------------------------
+Code:
+--------------------------------------------------------------------------------------------------------------------
+•	MapReduce( ) Function
+
+1.	Calculate the Total Price by Category.
+
+	i. mapFunction - 
+	
+	var mapFunction = function() {
+  		emit(this.category, this.price);
+	};
+
+	ii. reduceFunction -
+	
+	var reduceFunction = function(key, values) {
+  		return Array.sum(values);
+	};
+
+	iii. mapReduce Function - 
+	
+	db.products.mapReduce(
+  		mapFunction,
+  		reduceFunction,
+  		{
+    			out: "category_totals"
+  		}
+	);
+
+	Output:-
+	{ "_id": "Electronics", "value": 1600 }
+	{ "_id": "Furniture", "value": 450 }
+
+
+2.	Calculate the average price of products by category, but only for products with a price greater than $300.
+
+	i. mapFunction - 
+	
+	var mapFunction = function() {
+  		if (this.price > 300) {
+    			emit(this.category, { sum: this.price, count: 1 });
+  		}
+	};
+
+	ii. reduceFunction -
+	
+	var reduceFunction = function(key, values) {
+  		var reducedVal = { sum: 0, count: 0 };
+  		for (var i = 0; i < values.length; i++) {
+   			reducedVal.sum += values[i].sum;
+    			reducedVal.count += values[i].count;
+  		}
+  		return reducedVal;
+	};
+
+	iii. mapReduce Function - 
+	
+	db.products.mapReduce(
+ 		mapFunction,
+  		reduceFunction,
+  		{
+    			out: "avg_price_by_category",
+    			query: { price: { $gt: 300 } }, // Only products with a price greater than 			$300
+  		}
+	);
+
+	Output:-
+	{ "_id": "Electronics", "value": 800 }
+	{ "_id": "Furniture", "value": 400 }
+
+
+
 
