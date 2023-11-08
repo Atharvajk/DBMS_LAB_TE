@@ -1,0 +1,171 @@
+db.createCollection("MovieReview")
+
+db.MovieReview.insertOne({    tittle:"Movie2",    actors:["act1","act2"],    reviews:[        {name:"Person1", review:7.1,comment:"Average"},{name:"Person2",review:6.8,comment:"Decent"},{name:"Person3",review:9,comment:"Good"},],budget:300})
+
+db.MovieReview.insertOne(
+{
+    tittle:"Movie2",
+    actors:["act1","act2"],
+    reviews:[
+        {name:"Person1",
+        review:7.1,
+        comment:"Average"},
+        {name:"Person2",
+        review:6.8,
+        comment:"Decent"},
+        {name:"Person3",
+        review:9,
+        comment:"Good"},
+    ],
+    budget:300
+}
+)
+
+const entries=[
+{
+    tittle:"Movie3",
+    actors:["act1","act2"],
+    reviews:[
+        {name:"Person1",
+        review:4.2,
+        comment:"Bad"},
+        {name:"Person2",
+        review:6.9,
+        comment:"Decent"},
+        {name:"Person3",
+        review:8,
+        comment:"Good"},
+    ],
+    budget:100
+},
+{
+    tittle:"Movie4",
+    actors:["act1","act2"],
+    reviews:[
+        {name:"Person1",
+        review:7.1,
+        comment:"Average"},
+        {name:"Person2",
+        review:6,
+        comment:"Decent"},
+        {name:"Person3",
+        review:9.5,
+        comment:"Good"},
+    ],
+    budget:300
+},
+{
+    tittle:"Movie5",
+    actors:["act1","act2"],
+    reviews:[
+        {name:"Person1",
+        review:8.2,
+        comment:"Average"},
+        {name:"Person2",
+        review:8.6,
+        comment:"Decent"},
+        {name:"Person3",
+        review:9.5,
+        comment:"Good"},
+    ],
+    budget:500
+}
+
+]
+
+db.MovieReview.insertMany(entry)
+
+
+
+-------------------add to array------------------------
+db.MovieReview.find({tittle:"Movie1"})
+[
+  {
+    _id: ObjectId("654896f0283ded5c804a6842"),
+    tittle: 'Movie1',
+    actor: [ 'act1', 'act2' ],
+    rating: 6,
+    reviews: [
+      { name: 'rev1', comment: 'Good' },
+      { name: 'raj', comment: 'Average' }
+    ],
+    actors: [ 'Act3' ]
+  }
+]
+mongo_practical> db.MovieReview.updateOne({tittle:"Movie1"},{$addToSet:{actor:"Act3"}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+mongo_practical> db.MovieReview.find({tittle:"Movie1"})
+[
+  {
+    _id: ObjectId("654896f0283ded5c804a6842"),
+    tittle: 'Movie1',
+    actor: [ 'act1', 'act2', 'Act3' ],
+    rating: 6,
+    reviews: [
+      { name: 'rev1', comment: 'Good' },
+      { name: 'raj', comment: 'Average' }
+    ],
+    actors: [ 'Act3' ]
+  }
+]
+
+
+-------------to delete specific key value pairs-------------
+
+ db.MovieReview.find({tittle:"Movie1"})
+[
+  {
+    _id: ObjectId("654896f0283ded5c804a6842"),
+    tittle: 'Movie1',
+    actor: [ 'act1', 'act2', 'Act3' ],
+    rating: 6,
+    reviews: [
+      { name: 'rev1', comment: 'Good' },
+      { name: 'raj', comment: 'Average' }
+    ],
+    actors: [ 'Act3' ]
+  }
+]
+mongo_practical> db.MovieReview.updateOne({tittle:"Movie1"},{$unset:{"actors":1}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+mongo_practical> db.MovieReview.find({tittle:"Movie1"})
+[
+  {
+    _id: ObjectId("654896f0283ded5c804a6842"),
+    tittle: 'Movie1',
+    actor: [ 'act1', 'act2', 'Act3' ],
+    rating: 6,
+    reviews: [
+      { name: 'rev1', comment: 'Good' },
+      { name: 'raj', comment: 'Average' }
+    ]
+  }
+]
+
+
+----------------------------------------------------------------
+ db.MovieReview.find({genre:{$in:["Thriller","Drama"]}})
+----------------------------------------------------------------
+
+----------------------------------------------------------------
+ db.MovieReview.find({$or:[{genre:{$in:["Action","Thriller"]}},{budget:{$gt:400}}]})
+----------------------------------------------------------------
+
+ db.MovieReview.find({$and:[{genre:{$in:["Action","Thriller"]}},{budget:{$gte:400}}]},{_id:0,budget:1})
+
+[ { budget: 500 }, { budget: 400 } ]
+
+ db.MovieReview.find({$and:[{genre:{$in:["Action","Thriller"]}},{budget:{$gte:400}}]},{_id:0,budget:1}).sort({budget:1})
+[ { budget: 400 }, { budget: 500 } ]

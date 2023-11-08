@@ -1,0 +1,16 @@
+create procedure tranfer()
+begin
+DECLARE done INT default FALSE;
+declare id int;
+declare name varchar(50);
+declare cur cursor for select emp_id,emp_name from O_Emp;
+declare continue handler for not found set done= True;
+open cur;
+while not done do
+fetch cur into id, name;
+if not exists (select * from N_Emp where emp_id=id) then
+insert into N_Emp values(id,name);
+end if;
+end while;
+close cur;
+end;//

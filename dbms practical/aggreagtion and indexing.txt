@@ -1,0 +1,167 @@
+1.  Include three types of indexing(Single_key,Compound_Key,Unique)
+db.movieReview.createIndex({name:1})
+db.movieReview.createIndex({ genre: 1, rating: 1 })
+db.movieReview.createIndex({ id: 1 }, { unique: true })
+
+
+const reviews = [
+  {
+    productName: 'Product 1',
+    price: 29.99,
+    description: 'A great product for your needs',
+    review: [{userName: 'User1',rating: 5,comment: 'Excellent product!',},{userName: 'User2',rating: 4,comment: 'Pretty good, but could be better.',}]
+  },
+  {
+    productName: 'Product 3',
+    price: 12.4,
+    description: 'An amazing product that youll love',
+    review: [{userName: 'User1',rating: 2,comment: 'I cant live without this product!',},{userName: 'User4',rating: 1,comment: 'Not bad, but a bit pricey.',}]
+    },
+
+]
+
+---------------------------------------------------------------------------------------------------
+
+ db.MovieReview.aggregate([{$group:{_id:"$genre", count:{$sum:1}, names:{$push:{names:"$tittle"}}}}])
+[
+  { _id: 'Thriller', count: 1, names: [ { names: 'Movie2' } ] },
+  {
+    _id: 'Drama',
+    count: 2,
+    names: [ { names: 'Movie4' }, { names: 'Movie6' } ]
+  },
+  {
+    _id: 'Action',
+    count: 3,
+    names: [ { names: 'Movie5' }, { names: 'Movie3' }, { names: 'Movie1' } ]
+  }
+]
+
+---------------------------------------------------------------------------------------------------
+
+ db.MovieReview.aggregate([{$group:{_id:"$genre", count:{$sum:1}, names:{$push:{tittle:"$tittle"}}}}]).p
+retty()
+[
+  { _id: 'Thriller', count: 1, names: [ { tittle: 'Movie2' } ] },
+  {
+    _id: 'Drama',
+    count: 2,
+    names: [ { tittle: 'Movie4' }, { tittle: 'Movie6' } ]
+  },
+  {
+    _id: 'Action',
+    count: 3,
+    names: [
+      { tittle: 'Movie5' },
+      { tittle: 'Movie3' },
+      { tittle: 'Movie1' }
+    ]
+  }
+]
+
+---------------------------------------------------------------------------------------------------
+
+db.MovieReview.aggregate([{$unwind:"$actors"},{$group:{_id:"$actors", count:{$sum:1}, names:{$push:{tittle:"$tittle"}}}}]).pretty()
+[
+  {
+    _id: 'act1',
+    count: 5,
+    names: [
+      { tittle: 'Movie2' },
+      { tittle: 'Movie4' },
+      { tittle: 'Movie5' },
+      { tittle: 'Movie3' },
+      { tittle: 'Movie6' }
+    ]
+  },
+  {
+    _id: 'act2',
+    count: 6,
+    names: [
+      { tittle: 'Movie2' },
+      { tittle: 'Movie4' },
+      { tittle: 'Movie5' },
+      { tittle: 'Movie3' },
+      { tittle: 'Movie1' },
+      { tittle: 'Movie6' }
+    ]
+  },
+  {
+    _id: 'act3',
+    count: 2,
+    names: [ { tittle: 'Movie3' }, { tittle: 'Movie1' } ]
+  }
+]
+
+---------------------------------------------------------------------------------------------------
+
+
+ db.MovieReview.aggregate([{$unwind:"$actors"},{$group:{_id:"$actors", count:{$sum:1}, names:{$push:{tittle:"$tittle"}}}}]).pretty()
+[
+  {
+    _id: 'act1',
+    count: 5,
+    names: [
+      { tittle: 'Movie2' },
+      { tittle: 'Movie4' },
+      { tittle: 'Movie5' },
+      { tittle: 'Movie3' },
+      { tittle: 'Movie6' }
+    ]
+  },
+  {
+    _id: 'act2',
+    count: 6,
+    names: [
+      { tittle: 'Movie2' },
+      { tittle: 'Movie4' },
+      { tittle: 'Movie5' },
+      { tittle: 'Movie3' },
+      { tittle: 'Movie1' },
+      { tittle: 'Movie6' }
+    ]
+  },
+  {
+    _id: 'act3',
+    count: 2,
+    names: [ { tittle: 'Movie3' }, { tittle: 'Movie1' } ]
+  }
+]
+
+---------------------------------------------------------------------------------------------------
+ db.MovieReview.aggregate([{$unwind:"$reviews"},{$group:{_id:"$tittle", avgrating:{$avg:"$reviews.review"}}},{$sort:{_id:1}}]).pretty()
+[
+  { _id: 'Movie1', avgrating: 7.633333333333333 },
+  { _id: 'Movie2', avgrating: 7.633333333333333 },
+  { _id: 'Movie3', avgrating: 7.966666666666666 },
+  { _id: 'Movie4', avgrating: 7.533333333333334 },
+  { _id: 'Movie5', avgrating: 8.766666666666666 },
+  { _id: 'Movie6', avgrating: 8.133333333333333 }
+
+
+---------------------------------------------------------------------------------------------------
+   db.MovieReview.aggregate([{$group:{_id:"$genre", totalubud:{$sum:"$budget"},avgbud:{$avg:"$budget"}}}])
+[
+  { _id: 'Thriller', totalubud: 300, avgbud: 300 },
+  { _id: 'Action', totalubud: 1150, avgbud: 383.3333333333333 },
+  { _id: 'Drama', totalubud: 750, avgbud: 375 }
+]
+
+---------------------------------------------------------------------------------------------------
+ db.MovieReview.aggregate([{$unwind:"$reviews"},{$group:{_id:"$genre",avgrating:{$avg:"$reviews.review"}}}])
+[
+  { _id: 'Thriller', avgrating: 7.633333333333333 },
+  { _id: 'Action', avgrating: 8.122222222222222 },
+  { _id: 'Drama', avgrating: 7.833333333333333 }
+---------------------------------------------------------------------------------------------------
+  db.MovieReview.aggregate([{$unwind:"$reviews"},{$group:{_id:"$genre",avgrating:{$avg:"$reviews.review"},totalbud:{$sum:"$budget"}}}])
+[
+  { _id: 'Thriller', avgrating: 7.633333333333333, totalbud: 900 },
+  { _id: 'Action', avgrating: 8.122222222222222, totalbud: 3450 },
+  { _id: 'Drama', avgrating: 7.833333333333333, totalbud: 2250 }
+]
+
+---------------------------------------------------------------------------------------------------
+
+db.MovieReview.aggregate([{$unwind:"$reviews"},{$group:{_id:"$genre",avgrating:{$avg:"$reviews.review"},totalbud:{$sum:"$budget"}}},{$sort:{_id:1}},{$limit:1}])
+[ { _id: 'Action', avgrating: 8.122222222222222, totalbud: 3450 } ]

@@ -1,0 +1,4 @@
+ var mapfunc=function(){for(var i=0;i<this.reviews.length;i++){emit(this.tittle,this.reviews[i].review)}}
+  var reducefunc=function(key,values){return Array.avg(values);}
+
+   db.MovieReview.mapReduce(mapfunc,reducefunc,{query:{genre:{$in:["Action","Drama"]}},out:"Resultant2"})
